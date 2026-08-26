@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gastro Sales Mate & Menu Studio</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Stabilní skripty pro export PDF bez bílých stránek -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #0284c7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --border-radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 80px; }
+
+    header {
+      background: #1e293b; padding: 16px; border-bottom: 1px solid #334155;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 800; }
+
+    main { padding: 16px; }
+    .card { background: var(--card-bg); border-radius: var(--border-radius); padding: 16px; margin-bottom: 16px; border: 1px solid #334155; }
+    .card-title { font-size: 0.85rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; }
+
+    .form-group { margin-bottom: 10px; }
+    label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+    input, select { width: 100%; padding: 10px; border-radius: 6px; background: #0f172a; color: #fff; border: 1px solid #334155; font-size: 0.9rem; }
+
+    .section-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .section-header { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+
+    .item-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 30px; gap: 6px; margin-bottom: 8px; align-items: center; }
+    .item-row label { font-size: 0.65rem; margin-bottom: 2px; }
+
+    .btn { padding: 10px 14px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-align: center; }
+    .btn-primary { background: var(--accent); color: white; width: 100%; }
+    .btn-success { background: var(--success); color: white; width: 100%; font-size: 1rem; padding: 14px; margin-top: 10px; }
+    .btn-danger { background: var(--danger); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
+
+    /* MARŽOVÁ TABULKA PRO OBCHODNÍKA */
+    .profit-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--accent); }
+    .profit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .profit-box { background: rgba(2, 132, 199, 0.1); padding: 10px; border-radius: 6px; text-align: center; }
+    .profit-val { font-size: 1.2rem; font-weight: 800; color: var(--success); }
+
+    /* VYHRAZENÝ KONTEJNER PRO FINÁLNÍ PDF NÁPOJOVÝ LÍSTEK (SVĚTLÝ DESIGN PRO TISK/SEND) */
+    #pdf-wrapper { padding: 10px; background: #334155; border-radius: 8px; overflow-x: auto; }
+    
+    #pdf-template {
+      width: 450px; background: #ffffff; color: #111111; padding: 30px; border-radius: 4px;
+      margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); box-sizing: border-box;
+    }
+
+    /* ŠABLONA 1: BISTRO CLASSIC */
+    .style-bistro { font-family: 'Georgia', serif; }
+    .style-bistro .pdf-header { text-align: center; border-bottom: 2px solid #111; padding-bottom: 12px; margin-bottom: 200px; }
+    .style-bistro .pdf-logo { max-height: 60px; margin-bottom: 8px; }
+    .style-bistro .pdf-title { font-size: 1.6rem; text-transform: uppercase; letter-spacing: 1px; }
+    .style-bistro .pdf-sec-title { font-size: 1rem; text-transform: uppercase; border-bottom: 1px dashed #666; margin: 16px 0 8px 0; padding-bottom: 2px; font-weight: bold; }
+    .style-bistro .pdf-item { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.95rem; }
+
+    /* ŠABLONA 2: MODERN MINIMAL */
+    .style-modern { font-family: 'Arial', sans-serif; }
+    .style-modern .pdf-header { text-align: left; border-left: 4px solid #0284c7; padding-left: 12px; margin-bottom: 20px; }
+    .style-modern .pdf-logo { max-height: 50px; margin-bottom: 6px; }
+    .style-modern .pdf-title { font-size: 1.5rem; font-weight: 800; color: #0284c7; }
+    .style-modern .pdf-sec-title { font-size: 0.9rem; text-transform: uppercase; background: #f1f5f9; padding: 4px 8px; margin: 14px 0 8px 0; font-weight: bold; color: #334155; }
+    .style-modern .pdf-item { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem; border-bottom: 1px dotted #e2e8f0; padding-bottom: 2px; }
+
+    /* ŠABLONA 3: ELEGANT DARK */
+    .style-dark { font-family: 'Trebuchet MS', sans-serif; background: #111827 !important; color: #f9fafb !important; }
+    .style-dark .pdf-header { text-align: center; border-bottom: 1px solid #374151; padding-bottom: 12px; margin-bottom: 20px; }
+    .style-dark .pdf-logo { max-height: 60px; margin-bottom: 8px; }
+    .style-dark .pdf-title { font-size: 1.6rem; color: #f59e0b; text-transform: uppercase; }
+    .style-dark .pdf-sec-title { font-size: 1rem; color: #f59e0b; border-bottom: 1px solid #374151; margin: 16px 0 8px 0; padding-bottom: 2px; }
+    .style-dark .pdf-item { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Menu & Profit Creator</h1>
+    <span style="font-size: 0.75rem; color: var(--accent);">COCA-COLA HBC</span>
+  </header>
+
+  <main>
+    <!-- 1. HLAVIČKA A LOGO -->
+    <div class="card">
+      <div class="card-title">1. Základní Údaje & Logo Podniku</div>
+      
+      <div class="form-group">
+        <label>Název podniku / podniku:</label>
+        <input type="text" id="venue-name" value="Caffé & Restaurant Verona" oninput="renderAll()">
+      </div>
+      
+      <div class="form-group">
+        <label>Podtitul lístku:</label>
+        <input type="text" id="menu-subtitle" value="Nápojový a Jídelní lístek" oninput="renderAll()">
+      </div>
+
+      <div class="form-group">
+        <label>Logo podniku (Nahraj obrázek z mobilu / URL):</label>
+        <input type="file" id="logo-file" accept="image/*" onchange="handleLogoUpload(this)">
+      </div>
+
+      <div class="form-group">
+        <label>Designová Šablona Nápojového Lístku:</label>
+        <select id="design-style" onchange="renderAll()">
+          <option value="style-bistro">Classic Bistro (Elegance)</option>
+          <option value="style-modern">Modern Minimal (Čistý styl)</option>
+          <option value="style-dark">Elegant Dark (Tmavý styl)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 2. SPRAVOVANÉ SEKCE A POLOŽKY -->
+    <div class="card">
+      <div class="card-title">
+        <span>2. Sekce a Položky (Nákup vs Prodej)</span>
+      </div>
+      
+      <div id="sections-container"></div>
+
+      <button class="btn btn-primary" onclick="addSection()">+ Přidat Další Sekci (např. Rumy, Káva...)</button>
+    </div>
+
+    <!-- 3. MARŽOVÁ TABULKA PRO OBCHODNÍKA (POUZE V APCE, NEBUDE V PDF) -->
+    <div class="card profit-card">
+      <div class="card-title">
+        <span>📊 Prodejní Argumentace (Pouze pro Vás)</span>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--text-muted);">Tato čísla slouží pro Vaši kalkulaci s klientem a NEBUDOU součástí finálního PDF lístku pro hosty.</p>
+      
+      <div class="profit-grid">
+        <div class="profit-box">
+          <div class="profit-val" id="calc-avg-margin">0 %</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Průměrná marže nabídky</div>
+        </div>
+        <div class="profit-box">
+          <div class="profit-val" id="calc-total-profit">0 Kč</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Zisk podniku z 1 sady položek</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. NÁHLED A EXPORT PDF -->
+    <div class="card">
+      <div class="card-title">3. Náhled Finálního Nápojového Lístku</div>
+      
+      <div id="pdf-wrapper">
+        <div id="pdf-template" class="style-bistro">
+          <div class="pdf-header">
+            <img id="pdf-logo-img" class="pdf-logo" src="" style="display:none;">
+            <div class="pdf-title" id="pdf-venue-title">Caffé Verona</div>
+            <div id="pdf-menu-subtitle" style="font-size: 0.85rem; opacity: 0.8;">Nápojový lístek</div>
+          </div>
+          
+          <div id="pdf-content-body"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-success" onclick="generatePDF()">📄 Vygenerovat PDF do Mobilu</button>
+    </div>
+  </main>
+
+  <script>
+    // Výchozí datová struktura se sekcemi
+    let menuData = [
+      {
+        title: "Nealkoholické Nápoje",
+        items: [
+          { name: "Coca-Cola / Zero 0.33l", cost: 16, price: 55 },
+          { name: "Römerquelle Nerez 0.33l", cost: 12, price: 45 },
+          { name: "Cappy Džus 0.25l", cost: 18, price: 52 }
+        ]
+      },
+      {
+        title: "Káva & Teplé Nápoje",
+        items: [
+          { name: "Espresso / Lungo", cost: 8, price: 58 },
+          { name: "Cappuccino", cost: 12, price: 68 }
+        ]
+      },
+      {
+        title: "Alkoholické Nápoje & Rumy",
+        items: [
+          { name: "Diplomatico Reserva 4cl", cost: 42, price: 125 }
+        ]
+      }
+    ];
+
+    let logoBase64 = "";
+
+    function handleLogoUpload(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logoBase64 = e.target.result;
+          renderAll();
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function addSection() {
+      const title = prompt("Název nové sekce (např. Vodky, Jídlo, Speciály):");
+      if (title) {
+        menuData.push({ title: title, items: [{ name: "Nový produkt", cost: 15, price: 50 }] });
+        renderAll();
+      }
+    }
+
+    function removeSection(sIndex) {
+      menuData.splice(sIndex, 1);
+      renderAll();
+    }
+
+    function addItemToSection(sIndex) {
+      menuData[sIndex].items.push({ name: "Nový produkt", cost: 15, price: 50 });
+      renderAll();
+    }
+
+    function removeItem(sIndex, iIndex) {
+      menuData[sIndex].items.splice(iIndex, 1);
+      renderAll();
+    }
+
+    function updateItem(sIndex, iIndex, field, value) {
+      menuData[sIndex].items[iIndex][field] = field === 'name' ? value : parseFloat(value) || 0;
+      renderAll();
+    }
+
+    function updateSectionTitle(sIndex, value) {
+      menuData[sIndex].title = value;
+      renderAll();
+    }
+
+    // VYKRESLENÍ EDITACE S JASNÝMI COLUMNS
+    function renderInputs() {
+      const container = document.getElementById('sections-container');
+      container.innerHTML = menuData.map((sec, sIndex) => `
+        <div class="section-box">
+          <div class="section-header">
+            <input type="text" value="${sec.title}" style="font-weight:bold; color:var(--accent);" onchange="updateSectionTitle(${sIndex}, this.value)">
+            <button class="btn-danger" onclick="removeSection(${sIndex})">Smazat sekci</button>
+          </div>
+          
+          <div>
+            ${sec.items.map((item, iIndex) => `
+              <div class="item-row">
+                <div>
+                  <label>Název produktu</label>
+                  <input type="text" value="${item.name}" onchange="updateItem(${sIndex}, ${iIndex}, 'name', this.value)">
+                </div>
+                <div>
+                  <label style="color:var(--danger)">Nákup bez DPH</label>
+                  <input type="number" value="${item.cost}" onchange="updateItem(${sIndex}, ${iIndex}, 'cost', this.value)">
+                </div>
+                <div>
+                  <label style="color:var(--success)">Prodej vč. DPH</label>
+                  <input type="number" value="${item.price}" onchange="updateItem(${sIndex}, ${iIndex}, 'price', this.value)">
+                </div>
+                <div>
+                  <label>Marže</label>
+                  <div style="font-size:0.75rem; font-weight:bold; margin-top:10px;">${Math.round(((item.price/1.12 - item.cost)/(item.price/1.12))*100)}%</div>
+                </div>
+                <button class="btn-danger" style="margin-top:14px;" onclick="removeItem(${sIndex}, ${iIndex})">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-primary" style="font-size:0.75rem; padding:6px; margin-top:6px;" onclick="addItemToSection(${sIndex})">+ Přidat položku do sekce</button>
+        </div>
+      `).join('');
+    }
+
+    // COMPUTE A RENDER ALL
+    function renderAll() {
+      renderInputs();
+
+      // Nastavení šablony
+      const pdfTemplate = document.getElementById('pdf-template');
+      pdfTemplate.className = document.getElementById('design-style').value;
+
+      // Nastavení Hlavičky
+      document.getElementById('pdf-venue-title').innerText = document.getElementById('venue-name').value;
+      document.getElementById('pdf-menu-subtitle').innerText = document.getElementById('menu-subtitle').value;
+
+      // Logo
+      const logoImg = document.getElementById('pdf-logo-img');
+      if (logoBase64) {
+        logoImg.src = logoBase64;
+        logoImg.style.display = 'inline-block';
+      } else {
+        logoImg.style.display = 'none';
+      }
+
+      // Render položek do PDF lístku + kalkulace marží
+      let bodyHtml = "";
+      let totalCost = 0;
+      let totalNetSell = 0;
+
+      menuData.forEach(sec => {
+        bodyHtml += `<div class="pdf-sec-title">${sec.title}</div>`;
+        sec.items.forEach(item => {
+          const netSell = item.price / 1.12; // 12% gastro DPH
+          totalCost += item.cost;
+          totalNetSell += netSell;
+
+          bodyHtml += `
+            <div class="pdf-item">
+              <span>${item.name}</span>
+              <span style="font-weight:bold;">${item.price} Kč</span>
+            </div>
+          `;
+        });
+      });
+
+      document.getElementById('pdf-content-body').innerHTML = bodyHtml;
+
+      // Výpočet zisku a marže pro obchodníka
+      const totalProfit = totalNetSell - totalCost;
+      const avgMargin = totalNetSell > 0 ? (totalProfit / totalNetSell) * 100 : 0;
+
+      document.getElementById('calc-avg-margin').innerText = avgMargin.toFixed(1) + " %";
+      document.getElementById('calc-total-profit').innerText = Math.round(totalProfit) + " Kč";
+    }
+
+    // SPOLENAHLIVÉ GENEROVÁNÍ PDF BEZ BÍLÝCH STRÁNEK
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const element = document.getElementById('pdf-template');
+
+      // Vykreslení elementu na plátno
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Vytvoření PDF formátu A4
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 190; // mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      
+      const venueName = document.getElementById('venue-name').value || 'Menu';
+      pdf.save(`Napojovy_Listek_${venueName.replace(/\s+/g, '_')}.pdf`);
+    }
+
+    document.addEventListener('DOMContentLoaded', renderAll);
+  </script>
+</body>
+</html>
