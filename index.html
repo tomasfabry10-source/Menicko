@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gastro Menu & Profit Studio Pro</title>
+  <title>Gastro Menu & Profit Studio Pro 3.0</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0f172a">
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Great+Vibes&family=Lato:wght@400;700&family=Lora:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@400;700;800&family=Open+Sans:wght@400;600&family=Oswald:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Roboto:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-  <!-- Stabilní skripty pro export PDF bez bílých stránek -->
+  <!-- Skripty pro export PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -26,6 +26,7 @@
       --text-muted: #94a3b8;
       --success: #22c55e;
       --danger: #ef4444;
+      --coke-red: #f40009;
       --border-radius: 10px;
     }
 
@@ -40,7 +41,7 @@
 
     main { padding: 16px; }
     .card { background: var(--card-bg); border-radius: var(--border-radius); padding: 16px; margin-bottom: 16px; border: 1px solid #334155; }
-    .card-title { font-size: 0.85rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; }
+    .card-title { font-size: 0.85rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
@@ -60,60 +61,68 @@
     .btn-success { background: var(--success); color: white; width: 100%; font-size: 1rem; padding: 14px; margin-top: 10px; }
     .btn-danger { background: var(--danger); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
 
-    /* MARŽOVÁ TABULKA PRO OBCHODNÍKA */
     .profit-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--accent); }
     .profit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     .profit-box { background: rgba(2, 132, 199, 0.1); padding: 10px; border-radius: 6px; text-align: center; }
     .profit-val { font-size: 1.2rem; font-weight: 800; color: var(--success); }
 
-    /* KONTEJNER PRO FINÁLNÍ NÁPOJOVÝ LÍSTEK */
     #pdf-wrapper { padding: 10px; background: #334155; border-radius: 8px; overflow-x: auto; }
     
     #pdf-template {
       width: 450px; min-height: 600px; padding: 30px; border-radius: 4px;
       margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); box-sizing: border-box;
       position: relative; display: flex; flex-direction: column; justify-content: space-between;
-      background-size: cover; background-position: center;
     }
 
-    /* BARVY POZADÍ A TEXTURY */
-    .bg-white { background: #ffffff !important; color: #111; }
-    .bg-coffee { background: #3c2a21 !important; }
-    .bg-gold { background: linear-gradient(135deg, #fef08a, #eab308) !important; }
-    .bg-royal-blue { background: #0a192f !important; }
-    .bg-light-blue { background: #e0f2fe !important; }
-    .bg-pink { background: #fce7f3 !important; }
-    .bg-mint { background: #dcfce7 !important; }
+    /* ČISTÁ CSS POZADÍ A BAREVNÉ GRADIENTY */
+    .bg-white { background: #ffffff !important; }
+    .bg-coffee { background: #2b1d14 !important; }
     .bg-dark-slate { background: #111827 !important; }
     
-    /* TEXTURY POZADÍ */
-    .bg-marble { 
-      background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?auto=format&fit=crop&w=800&q=80') !important;
+    /* GRADIENTY DŘEVA A KAMENE (BEZ EXTERNÍCH OBRÁZKŮ) */
+    .bg-wood-dark { 
+      background: linear-gradient(180deg, #2d1b10 0%, #1a0f08 100%) !important;
     }
     .bg-wood-light { 
-      background-image: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), url('https://images.unsplash.com/photo-1546484475-7f7bd55792da?auto=format&fit=crop&w=800&q=80') !important;
+      background: linear-gradient(180deg, #f7e7ce 0%, #e6cbab 100%) !important;
     }
-    .bg-wood-dark { 
-      background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80') !important;
+    .bg-marble { 
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+    }
+    .bg-stone-dark {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    }
+    .bg-gold { 
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #ca8a04 100%) !important;
+    }
+    .bg-royal-blue { 
+      background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%) !important;
+    }
+    .bg-light-blue { 
+      background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+    }
+    .bg-pink { 
+      background: linear-gradient(180deg, #fff1f2 0%, #fce7f3 100%) !important;
+    }
+    .bg-mint { 
+      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
     }
 
-    /* ŠABLONA STRÁNKY */
     .pdf-header { text-align: center; border-bottom: 2px solid currentColor; padding-bottom: 12px; margin-bottom: 15px; }
     .pdf-logo { max-height: 60px; margin-bottom: 8px; }
     .pdf-title { font-size: 1.7rem; letter-spacing: 1px; }
     .pdf-sec-title { font-size: 1.1rem; border-bottom: 1px dashed currentColor; margin: 16px 0 8px 0; padding-bottom: 2px; font-weight: bold; }
     .pdf-item { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.95rem; }
 
-    /* ZÁPATÍ S COCA-COLA LOGEM */
     .pdf-footer { text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid rgba(150,150,150,0.3); }
-    .coke-footer-logo { height: 22px; vertical-align: middle; }
+    .coke-footer-logo { height: 26px; vertical-align: middle; display: inline-block; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Menu & Profit Studio Pro</h1>
-    <span style="font-size: 0.75rem; color: var(--accent);">COCA-COLA HBC</span>
+    <h1>Menu & Profit Studio 3.0 Pro</h1>
+    <span style="font-size: 0.75rem; color: var(--coke-red); font-weight: bold;">COCA-COLA HBC</span>
   </header>
 
   <main>
@@ -131,34 +140,55 @@
         <input type="text" id="menu-subtitle" value="Nápojový a Jídelní lístek" oninput="renderAll()">
       </div>
 
-      <div class="form-group">
-        <label>Logo podniku (Nahraj obrázek z mobilu / URL):</label>
-        <input type="file" id="logo-file" accept="image/*" onchange="handleLogoUpload(this)">
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Logo podniku (Soubor z mobilu):</label>
+          <input type="file" id="logo-file" accept="image/*" onchange="handleLogoUpload(this)">
+        </div>
+        <div class="form-group">
+          <label>Barva Loga v záhlaví:</label>
+          <select id="logo-color-filter" onchange="renderAll()">
+            <option value="none">Původní barvy</option>
+            <option value="red">Červená</option>
+            <option value="black">Černá</option>
+            <option value="white">Bílá</option>
+            <option value="gold">Zlatá</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <!-- 2. DESIGN & STYLING (POZADÍ, FONTY, BARVY, LOGO V ZÁPATÍ) -->
+    <!-- 2. DESIGN & STYLING -->
     <div class="card">
-      <div class="card-title">2. Kompletní Vizuální Design</div>
+      <div class="card-title">2. Vizuální Styling & Coca-Cola Brand Presety</div>
 
       <div class="form-group">
-        <label>Styl Pozadí / Dekor:</label>
+        <label style="color: var(--coke-red); font-weight: bold;">Rychlé Brand Stylování (1-Click Presets):</label>
+        <div class="grid-3" style="margin-bottom: 10px;">
+          <button class="btn" style="background: #f40009; color: #fff;" onclick="applyBrandPreset('classic')">1. CC Classic</button>
+          <button class="btn" style="background: #000; color: #f40009; border: 1px solid #f40009;" onclick="applyBrandPreset('zero')">2. CC Zero</button>
+          <button class="btn" style="background: #000; color: #d4af37; border: 1px solid #d4af37;" onclick="applyBrandPreset('zerozero')">3. CC Zero Zero</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Styl Pozadí / Přechody:</label>
         <select id="bg-style" onchange="renderAll()">
           <option value="bg-white">Čistě Bílé (Klasika)</option>
-          <option value="bg-coffee">Kávově Hnědé (Bistro / Kafe)</option>
-          <option value="bg-gold">Zlaté (Premium / Luxus)</option>
-          <option value="bg-royal-blue">Královská Tmavomodrá</option>
-          <option value="bg-light-blue">Světle Modrá</option>
-          <option value="bg-pink">Jemně Růžová</option>
-          <option value="bg-mint">Zelenkavá / Mátová</option>
-          <option value="bg-dark-slate">Tmavá Břidlice (Modern Dark)</option>
-          <option value="bg-marble">Dekor Kamene (Mramor)</option>
-          <option value="bg-wood-light">Dekor Dřeva (Světlý)</option>
-          <option value="bg-wood-dark">Dekor Dřeva (Tmavý)</option>
+          <option value="bg-wood-dark">Tmavé Dřevo (Elegance Gradient)</option>
+          <option value="bg-wood-light">Světlé Dřevo (Natural Gradient)</option>
+          <option value="bg-marble">Světelný Mramor (Gradient)</option>
+          <option value="bg-stone-dark">Grafitový Kámen / Břidlice</option>
+          <option value="bg-gold">Zlatý Luxusní Gradient</option>
+          <option value="bg-royal-blue">Královský Modro-Černý Gradient</option>
+          <option value="bg-coffee">Kávově Hnědé</option>
+          <option value="bg-light-blue">Světle Modrý Přechod</option>
+          <option value="bg-pink">Jemně Růžový Přechod</option>
+          <option value="bg-mint">Mátový / Zelenkavý Přechod</option>
+          <option value="bg-dark-slate">Tmavá Břidlice</option>
         </select>
       </div>
 
-      <!-- TYPOGRAFIE (10 FONTEK) -->
       <div class="grid-3">
         <div class="form-group">
           <label>Písmo Titulku:</label>
@@ -207,15 +237,14 @@
         </div>
       </div>
 
-      <!-- BARVY TEXTŮ (15 BARVEK) -->
       <div class="grid-3">
         <div class="form-group">
-          <label>Barva Náznvu Podniku:</label>
+          <label>Barva Názvu Podniku:</label>
           <select id="color-title" onchange="renderAll()">
+            <option value="#f40009">Červená (Coke Red)</option>
             <option value="#111827">Tmavě Černá</option>
             <option value="#ffffff">Čistě Bílá</option>
             <option value="#d4af37">Zlatá (Gold)</option>
-            <option value="#b91c1c">Červená (Coke Red)</option>
             <option value="#1e3a8a">Královská Modrá</option>
             <option value="#78350f">Kávově Hnědá</option>
             <option value="#065f46">Smaragdově Zelená</option>
@@ -232,10 +261,10 @@
         <div class="form-group">
           <label>Barva Sekcí:</label>
           <select id="color-section" onchange="renderAll()">
-            <option value="#d4af37">Zlatá (Gold)</option>
             <option value="#111827">Tmavě Černá</option>
+            <option value="#f40009">Červená (Coke Red)</option>
+            <option value="#d4af37">Zlatá (Gold)</option>
             <option value="#ffffff">Čistě Bílá</option>
-            <option value="#b91c1c">Červená</option>
             <option value="#1e3a8a">Královská Modrá</option>
             <option value="#78350f">Kávově Hnědá</option>
             <option value="#065f46">Zelená</option>
@@ -255,10 +284,10 @@
             <option value="#111827">Tmavě Černá</option>
             <option value="#ffffff">Čistě Bílá</option>
             <option value="#374151">Břidlicová Šedá</option>
+            <option value="#f40009">Červená</option>
+            <option value="#d4af37">Zlatá</option>
             <option value="#78350f">Kávová Hnědá</option>
             <option value="#1e3a8a">Modrá</option>
-            <option value="#d4af37">Zlatá</option>
-            <option value="#b91c1c">Červená</option>
             <option value="#065f46">Zelená</option>
             <option value="#4c1d95">Fialová</option>
             <option value="#be185d">Růžová</option>
@@ -271,13 +300,14 @@
         </div>
       </div>
 
-      <!-- BARVA LOGA COCA-COLA V ZÁPATÍ -->
+      <!-- BARVA LOGA COCA-COLA V ZÁPATÍ (ČERVENÁ, ČERNÁ, BÍLÁ, ZLATÁ) -->
       <div class="form-group">
         <label>Zápatí - Logo Coca-Cola:</label>
         <select id="coke-logo-style" onchange="renderAll()">
           <option value="red">Červené logo Coca-Cola</option>
           <option value="black">Černé logo Coca-Cola</option>
           <option value="white">Bílé logo Coca-Cola</option>
+          <option value="gold">Zlaté logo Coca-Cola</option>
           <option value="none">Bez zápatí</option>
         </select>
       </div>
@@ -287,7 +317,7 @@
     <div class="card">
       <div class="card-title">3. Správa Sekcí a Položek</div>
       <div id="sections-container"></div>
-      <button class="btn btn-primary" onclick="addSection()">+ Přidat Další Sekci (např. Rumy, Káva...)</button>
+      <button class="btn btn-primary" onclick="addSection()">+ Přidat Další Sekci (např. Káva, Pivo...)</button>
     </div>
 
     <!-- 4. MARŽOVÁ TABULKA PRO OBCHODNÍKA -->
@@ -324,9 +354,8 @@
             <div id="pdf-content-body"></div>
           </div>
 
-          <!-- ZÁPATÍ S LOGEM COCA-COLA -->
           <div class="pdf-footer" id="pdf-coke-footer">
-            <img id="coke-footer-img" class="coke-footer-logo" src="" alt="Coca-Cola">
+            <img id="coke-footer-img" class="coke-footer-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" alt="Coca-Cola">
           </div>
         </div>
       </div>
@@ -336,38 +365,64 @@
   </main>
 
   <script>
-    // Vektorové varianty Coca-Cola loga pro zápatí
-    const COKE_LOGOS = {
-      red: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg',
-      black: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png',
-      white: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/1024px-Coca-Cola_logo.svg.png'
-    };
-
-    let menuData = [
+    const INITIAL_PORTFOLIO = [
       {
-        title: "Nealkoholické Nápoje",
+        title: "Nealkoholické Nápoje (Sklo)",
         items: [
-          { name: "Coca-Cola / Zero 0.33l", cost: 16, price: 55 },
-          { name: "Römerquelle Nerez 0.33l", cost: 12, price: 45 },
-          { name: "Cappy Džus 0.25l", cost: 18, price: 52 }
-        ]
-      },
-      {
-        title: "Káva & Teplé Nápoje",
-        items: [
-          { name: "Espresso / Lungo", cost: 8, price: 58 },
-          { name: "Cappuccino", cost: 12, price: 68 }
+          { name: "Coca-Cola 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Coca-Cola Zero 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Coca-Cola Zero Zero 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Coca-Cola Cherry 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Fanta Pomeranč 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Sprite 0.33l sklo", cost: 25.70, price: 55 },
+          { name: "Kinley Tonic Water 0.25l", cost: 25.70, price: 55 },
+          { name: "Kinley Ginger Ale 0.25l", cost: 25.70, price: 55 },
+          { name: "Kinley Pink Aromatic Berry 0.25l", cost: 25.70, price: 55 },
+          { name: "Kinley Purple 0.25l", cost: 25.70, price: 55 },
+          { name: "Cappy Pomeranč 100% 0.25l", cost: 31.00, price: 58 },
+          { name: "Cappy Jablko 100% 0.25l", cost: 31.00, price: 58 },
+          { name: "Cappy Jahoda 0.25l", cost: 26.00, price: 52 },
+          { name: "Cappy Multivitamín 0.25l", cost: 26.00, price: 52 },
+          { name: "Cappy Černý Rybíz 0.25l", cost: 26.00, price: 52 },
+          { name: "Römerquelle Sycená / Nesycená 0.33l", cost: 17.00, price: 45 },
+          { name: "Römerquelle Citronová tráva 0.33l", cost: 21.00, price: 49 },
+          { name: "Natura Neperlivá / Jemná 0.30l", cost: 8.50, price: 39 },
+          { name: "Fuzetea Broskev a ibišek 0.25l", cost: 24.70, price: 52 }
         ]
       },
       {
         title: "Alkoholické Nápoje & Rumy",
         items: [
-          { name: "Diplomatico Reserva 4cl", cost: 42, price: 125 }
+          { name: "Brugal 1888 40% (4cl)", cost: 44.86, price: 125 }
         ]
       }
     ];
 
+    let menuData = JSON.parse(JSON.stringify(INITIAL_PORTFOLIO));
     let logoBase64 = "";
+
+    function applyBrandPreset(preset) {
+      if (preset === 'classic') {
+        document.getElementById('bg-style').value = 'bg-white';
+        document.getElementById('color-title').value = '#f40009';
+        document.getElementById('color-section').value = '#111827';
+        document.getElementById('color-items').value = '#111827';
+        document.getElementById('coke-logo-style').value = 'red';
+      } else if (preset === 'zero') {
+        document.getElementById('bg-style').value = 'bg-dark-slate';
+        document.getElementById('color-title').value = '#f40009';
+        document.getElementById('color-section').value = '#ffffff';
+        document.getElementById('color-items').value = '#ffffff';
+        document.getElementById('coke-logo-style').value = 'red';
+      } else if (preset === 'zerozero') {
+        document.getElementById('bg-style').value = 'bg-dark-slate';
+        document.getElementById('color-title').value = '#d4af37';
+        document.getElementById('color-section').value = '#d4af37';
+        document.getElementById('color-items').value = '#ffffff';
+        document.getElementById('coke-logo-style').value = 'gold';
+      }
+      renderAll();
+    }
 
     function handleLogoUpload(input) {
       if (input.files && input.files[0]) {
@@ -381,7 +436,7 @@
     }
 
     function addSection() {
-      const title = prompt("Název nové sekce (např. Rumy, Káva, Speciály):");
+      const title = prompt("Název nové sekce:");
       if (title) {
         menuData.push({ title: title, items: [{ name: "Nový produkt", cost: 15, price: 50 }] });
         renderAll();
@@ -431,7 +486,7 @@
                 </div>
                 <div>
                   <label style="color:var(--danger)">Nákup bez DPH</label>
-                  <input type="number" value="${item.cost}" onchange="updateItem(${sIndex}, ${iIndex}, 'cost', this.value)">
+                  <input type="number" step="0.01" value="${item.cost}" onchange="updateItem(${sIndex}, ${iIndex}, 'cost', this.value)">
                 </div>
                 <div>
                   <label style="color:var(--success)">Prodej vč. DPH</label>
@@ -454,21 +509,16 @@
       renderInputs();
 
       const pdfTemplate = document.getElementById('pdf-template');
-      
-      // Pozadí a Styl
       pdfTemplate.className = document.getElementById('bg-style').value;
 
-      // Fonty
       const fontTitle = document.getElementById('font-title').value;
       const fontSection = document.getElementById('font-section').value;
       const fontItems = document.getElementById('font-items').value;
 
-      // Barvy
       const colorTitle = document.getElementById('color-title').value;
       const colorSection = document.getElementById('color-section').value;
       const colorItems = document.getElementById('color-items').value;
 
-      // Titulek Podniku
       const titleEl = document.getElementById('pdf-venue-title');
       titleEl.innerText = document.getElementById('venue-name').value;
       titleEl.style.fontFamily = fontTitle;
@@ -479,16 +529,21 @@
       subTitleEl.style.fontFamily = fontItems;
       subTitleEl.style.color = colorTitle;
 
-      // Logo podniku
       const logoImg = document.getElementById('pdf-logo-img');
+      const logoFilter = document.getElementById('logo-color-filter').value;
+
       if (logoBase64) {
         logoImg.src = logoBase64;
         logoImg.style.display = 'inline-block';
+        if(logoFilter === 'red') logoImg.style.filter = 'drop-shadow(0px 0px 0px #f40009) sepia(1) hue-rotate(300deg) saturate(5)';
+        else if(logoFilter === 'black') logoImg.style.filter = 'brightness(0)';
+        else if(logoFilter === 'white') logoImg.style.filter = 'brightness(0) invert(1)';
+        else if(logoFilter === 'gold') logoImg.style.filter = 'sepia(1) hue-rotate(5deg) saturate(3)';
+        else logoImg.style.filter = 'none';
       } else {
         logoImg.style.display = 'none';
       }
 
-      // Vykreslení Sekcí a Produktů do PDF
       let bodyHtml = "";
       let totalCost = 0;
       let totalNetSell = 0;
@@ -516,26 +571,28 @@
 
       document.getElementById('pdf-content-body').innerHTML = bodyHtml;
 
-      // Zápatí Coca-Cola
+      // ZÁPATÍ COCA-COLA LOGO (SPOLEHLIVÉ FILTRY PRO ČERVENOU, BÍLOU, ČERNOU I ZLATOU)
       const cokeStyle = document.getElementById('coke-logo-style').value;
       const footerEl = document.getElementById('pdf-coke-footer');
       const footerImg = document.getElementById('coke-footer-img');
 
       if (cokeStyle !== 'none') {
         footerEl.style.display = 'block';
-        footerImg.src = COKE_LOGOS[cokeStyle] || COKE_LOGOS.red;
-        if(cokeStyle === 'white') {
+        footerImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg';
+
+        if (cokeStyle === 'red') {
+          footerImg.style.filter = 'brightness(0) saturate(100%) invert(14%) sepia(98%) saturate(6080%) hue-rotate(354deg) brightness(97%) contrast(108%)';
+        } else if (cokeStyle === 'white') {
           footerImg.style.filter = 'brightness(0) invert(1)';
-        } else if(cokeStyle === 'black') {
+        } else if (cokeStyle === 'black') {
           footerImg.style.filter = 'brightness(0)';
-        } else {
-          footerImg.style.filter = 'none';
+        } else if (cokeStyle === 'gold') {
+          footerImg.style.filter = 'brightness(0) saturate(100%) invert(72%) sepia(51%) saturate(542%) hue-rotate(5deg) brightness(93%) contrast(88%)';
         }
       } else {
         footerEl.style.display = 'none';
       }
 
-      // Výpočet zisku pro obchodníka
       const totalProfit = totalNetSell - totalCost;
       const avgMargin = totalNetSell > 0 ? (totalProfit / totalNetSell) * 100 : 0;
 
