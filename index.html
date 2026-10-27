@@ -68,9 +68,10 @@
 
     #pdf-wrapper { padding: 10px; background: #334155; border-radius: 8px; overflow-x: auto; }
     
-    #pdf-template {
-      width: 450px; min-height: 600px; padding: 30px; border-radius: 4px;
-      margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); box-sizing: border-box;
+    /* Vzhled jedné stránky lístku – přesný A4 poměr, bez bílých okrajů */
+    .pdf-page {
+      width: 500px; min-height: 705px; padding: 40px; border-radius: 0px;
+      margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); box-sizing: border-box;
       position: relative; display: flex; flex-direction: column; justify-content: space-between;
     }
 
@@ -79,43 +80,22 @@
     .bg-coffee { background: #2b1d14 !important; }
     .bg-dark-slate { background: #111827 !important; }
     
-    /* GRADIENTY DŘEVA A KAMENE (BEZ EXTERNÍCH OBRÁZKŮ) */
-    .bg-wood-dark { 
-      background: linear-gradient(180deg, #2d1b10 0%, #1a0f08 100%) !important;
-    }
-    .bg-wood-light { 
-      background: linear-gradient(180deg, #f7e7ce 0%, #e6cbab 100%) !important;
-    }
-    .bg-marble { 
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
-    }
-    .bg-stone-dark {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
-    }
-    .bg-gold { 
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #ca8a04 100%) !important;
-    }
-    .bg-royal-blue { 
-      background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%) !important;
-    }
-    .bg-light-blue { 
-      background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%) !important;
-    }
-    .bg-pink { 
-      background: linear-gradient(180deg, #fff1f2 0%, #fce7f3 100%) !important;
-    }
-    .bg-mint { 
-      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
-    }
+    .bg-wood-dark { background: linear-gradient(180deg, #2d1b10 0%, #1a0f08 100%) !important; }
+    .bg-wood-light { background: linear-gradient(180deg, #f7e7ce 0%, #e6cbab 100%) !important; }
+    .bg-marble { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important; }
+    .bg-stone-dark { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important; }
+    .bg-gold { background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #ca8a04 100%) !important; }
+    .bg-royal-blue { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%) !important; }
+    .bg-light-blue { background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%) !important; }
+    .bg-pink { background: linear-gradient(180deg, #fff1f2 0%, #fce7f3 100%) !important; }
+    .bg-mint { background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important; }
 
     .pdf-header { text-align: center; border-bottom: 2px solid currentColor; padding-bottom: 12px; margin-bottom: 15px; }
     .pdf-logo { max-height: 60px; margin-bottom: 8px; }
     .pdf-title { font-size: 1.7rem; letter-spacing: 1px; }
     .pdf-sec-title { font-size: 1.1rem; border-bottom: 1px dashed currentColor; margin: 16px 0 8px 0; padding-bottom: 2px; font-weight: bold; }
     .pdf-item { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.95rem; }
-
-    .pdf-footer { text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid rgba(150,150,150,0.3); }
-    .coke-footer-logo { height: 26px; vertical-align: middle; display: inline-block; }
+    .pdf-footer { height: 15px; } /* Prostor pro čistý dolní okraj */
   </style>
 </head>
 <body>
@@ -131,22 +111,22 @@
       <div class="card-title">1. Údaje o Podniku a Logo</div>
       
       <div class="form-group">
-        <label>Název podniku / Restaurace:</label>
+       <label>Název podniku / Restaurace:</label>
         <input type="text" id="venue-name" value="Caffé & Restaurant Verona" oninput="renderAll()">
       </div>
       
       <div class="form-group">
-        <label>Podtitul lístku:</label>
+       <label>Podtitul lístku:</label>
         <input type="text" id="menu-subtitle" value="Nápojový a Jídelní lístek" oninput="renderAll()">
       </div>
 
       <div class="grid-2">
         <div class="form-group">
-          <label>Logo podniku (Soubor z mobilu):</label>
+         <label>Logo podniku (Soubor z mobilu):</label>
           <input type="file" id="logo-file" accept="image/*" onchange="handleLogoUpload(this)">
         </div>
         <div class="form-group">
-          <label>Barva Loga v záhlaví:</label>
+         <label>Barva Loga v záhlaví:</label>
           <select id="logo-color-filter" onchange="renderAll()">
             <option value="none">Původní barvy</option>
             <option value="red">Červená</option>
@@ -172,7 +152,7 @@
       </div>
 
       <div class="form-group">
-        <label>Styl Pozadí / Přechody:</label>
+       <label>Styl Pozadí / Přechody:</label>
         <select id="bg-style" onchange="renderAll()">
           <option value="bg-white">Čistě Bílé (Klasika)</option>
           <option value="bg-wood-dark">Tmavé Dřevo (Elegance Gradient)</option>
@@ -191,7 +171,7 @@
 
       <div class="grid-3">
         <div class="form-group">
-          <label>Písmo Titulku:</label>
+         <label>Písmo Titulku:</label>
           <select id="font-title" onchange="renderAll()">
             <option value="'Playfair Display', serif">Playfair (Elegant)</option>
             <option value="'Cinzel', serif">Cinzel (Luxus)</option>
@@ -206,7 +186,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Písmo Sekcí:</label>
+         <label>Písmo Sekcí:</label>
           <select id="font-section" onchange="renderAll()">
             <option value="'Montserrat', sans-serif">Montserrat</option>
             <option value="'Cinzel', serif">Cinzel</option>
@@ -221,7 +201,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Písmo Produktů:</label>
+         <label>Písmo Produktů:</label>
           <select id="font-items" onchange="renderAll()">
             <option value="'Roboto', sans-serif">Roboto</option>
             <option value="'Lato', sans-serif">Lato</option>
@@ -239,7 +219,7 @@
 
       <div class="grid-3">
         <div class="form-group">
-          <label>Barva Názvu Podniku:</label>
+         <label>Barva Názvu Podniku:</label>
           <select id="color-title" onchange="renderAll()">
             <option value="#f40009">Červená (Coke Red)</option>
             <option value="#111827">Tmavě Černá</option>
@@ -259,7 +239,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Barva Sekcí:</label>
+         <label>Barva Sekcí:</label>
           <select id="color-section" onchange="renderAll()">
             <option value="#111827">Tmavě Černá</option>
             <option value="#f40009">Červená (Coke Red)</option>
@@ -279,7 +259,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Barva Produktů:</label>
+         <label>Barva Produktů:</label>
           <select id="color-items" onchange="renderAll()">
             <option value="#111827">Tmavě Černá</option>
             <option value="#ffffff">Čistě Bílá</option>
@@ -298,18 +278,6 @@
             <option value="#9333ea">Purpurová</option>
           </select>
         </div>
-      </div>
-
-      <!-- BARVA LOGA COCA-COLA V ZÁPATÍ (ČERVENÁ, ČERNÁ, BÍLÁ, ZLATÁ) -->
-      <div class="form-group">
-        <label>Zápatí - Logo Coca-Cola:</label>
-        <select id="coke-logo-style" onchange="renderAll()">
-          <option value="red">Červené logo Coca-Cola</option>
-          <option value="black">Černé logo Coca-Cola</option>
-          <option value="white">Bílé logo Coca-Cola</option>
-          <option value="gold">Zlaté logo Coca-Cola</option>
-          <option value="none">Bez zápatí</option>
-        </select>
       </div>
     </div>
 
@@ -341,23 +309,10 @@
 
     <!-- 5. NÁHLED A PDF EXPORT -->
     <div class="card">
-      <div class="card-title">4. Náhled Finálního Nápojového Lístku</div>
+      <div class="card-title">4. Náhled Finálního Nápojového Lístku (Profesionální Stránkování)</div>
       
       <div id="pdf-wrapper">
-        <div id="pdf-template" class="bg-white">
-          <div>
-            <div class="pdf-header">
-              <img id="pdf-logo-img" class="pdf-logo" src="" style="display:none;">
-              <div class="pdf-title" id="pdf-venue-title">Caffé Verona</div>
-              <div id="pdf-menu-subtitle" style="font-size: 0.85rem; opacity: 0.8;">Nápojový lístek</div>
-            </div>
-            <div id="pdf-content-body"></div>
-          </div>
-
-          <div class="pdf-footer" id="pdf-coke-footer">
-            <img id="coke-footer-img" class="coke-footer-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" alt="Coca-Cola">
-          </div>
-        </div>
+        <div id="pdf-pages-container"></div>
       </div>
 
       <button class="btn btn-success" onclick="generatePDF()">📄 Vygenerovat PDF do Mobilu</button>
@@ -407,19 +362,16 @@
         document.getElementById('color-title').value = '#f40009';
         document.getElementById('color-section').value = '#111827';
         document.getElementById('color-items').value = '#111827';
-        document.getElementById('coke-logo-style').value = 'red';
       } else if (preset === 'zero') {
         document.getElementById('bg-style').value = 'bg-dark-slate';
         document.getElementById('color-title').value = '#f40009';
         document.getElementById('color-section').value = '#ffffff';
         document.getElementById('color-items').value = '#ffffff';
-        document.getElementById('coke-logo-style').value = 'red';
       } else if (preset === 'zerozero') {
         document.getElementById('bg-style').value = 'bg-dark-slate';
         document.getElementById('color-title').value = '#d4af37';
         document.getElementById('color-section').value = '#d4af37';
         document.getElementById('color-items').value = '#ffffff';
-        document.getElementById('coke-logo-style').value = 'gold';
       }
       renderAll();
     }
@@ -480,23 +432,23 @@
           <div>
             ${sec.items.map((item, iIndex) => `
               <div class="item-row">
-                <div>
-                  <label>Název produktu</label>
-                  <input type="text" value="${item.name}" onchange="updateItem(${sIndex}, ${iIndex}, 'name', this.value)">
-                </div>
-                <div>
-                  <label style="color:var(--danger)">Nákup bez DPH</label>
-                  <input type="number" step="0.01" value="${item.cost}" onchange="updateItem(${sIndex}, ${iIndex}, 'cost', this.value)">
-                </div>
-                <div>
-                  <label style="color:var(--success)">Prodej vč. DPH</label>
-                  <input type="number" value="${item.price}" onchange="updateItem(${sIndex}, ${iIndex}, 'price', this.value)">
-                </div>
-                <div>
-                  <label>Marže</label>
-                  <div style="font-size:0.75rem; font-weight:bold; margin-top:10px;">${Math.round(((item.price/1.12 - item.cost)/(item.price/1.12))*100)}%</div>
-                </div>
-                <button class="btn-danger" style="margin-top:14px;" onclick="removeItem(${sIndex}, ${iIndex})">✕</button>
+               <div>
+                 <label>Název produktu</label>
+                 <input type="text" value="${item.name}" onchange="updateItem(${sIndex}, ${iIndex}, 'name', this.value)">
+               </div>
+               <div>
+                 <label style="color:var(--danger)">Nákup bez DPH</label>
+                 <input type="number" step="0.01" value="${item.cost}" onchange="updateItem(${sIndex}, ${iIndex}, 'cost', this.value)">
+               </div>
+               <div>
+                 <label style="color:var(--success)">Prodej vč. DPH</label>
+                 <input type="number" value="${item.price}" onchange="updateItem(${sIndex}, ${iIndex}, 'price', this.value)">
+               </div>
+               <div>
+                 <label>Marže</label>
+                 <div style="font-size:0.75rem; font-weight:bold; margin-top:10px;">${Math.round(((item.price/1.12 - item.cost)/(item.price/1.12))*100)}%</div>
+               </div>
+               <button class="btn-danger" style="margin-top:14px;" onclick="removeItem(${sIndex}, ${iIndex})">✕</button>
               </div>
             `).join('')}
           </div>
@@ -508,9 +460,7 @@
     function renderAll() {
       renderInputs();
 
-      const pdfTemplate = document.getElementById('pdf-template');
-      pdfTemplate.className = document.getElementById('bg-style').value;
-
+      const bgStyle = document.getElementById('bg-style').value;
       const fontTitle = document.getElementById('font-title').value;
       const fontSection = document.getElementById('font-section').value;
       const fontItems = document.getElementById('font-items').value;
@@ -519,80 +469,85 @@
       const colorSection = document.getElementById('color-section').value;
       const colorItems = document.getElementById('color-items').value;
 
-      const titleEl = document.getElementById('pdf-venue-title');
-      titleEl.innerText = document.getElementById('venue-name').value;
-      titleEl.style.fontFamily = fontTitle;
-      titleEl.style.color = colorTitle;
-
-      const subTitleEl = document.getElementById('pdf-menu-subtitle');
-      subTitleEl.innerText = document.getElementById('menu-subtitle').value;
-      subTitleEl.style.fontFamily = fontItems;
-      subTitleEl.style.color = colorTitle;
-
-      const logoImg = document.getElementById('pdf-logo-img');
+      const venueName = document.getElementById('venue-name').value;
+      const menuSubtitle = document.getElementById('menu-subtitle').value;
       const logoFilter = document.getElementById('logo-color-filter').value;
 
+      let venueLogoHtml = '';
       if (logoBase64) {
-        logoImg.src = logoBase64;
-        logoImg.style.display = 'inline-block';
-        if(logoFilter === 'red') logoImg.style.filter = 'drop-shadow(0px 0px 0px #f40009) sepia(1) hue-rotate(300deg) saturate(5)';
-        else if(logoFilter === 'black') logoImg.style.filter = 'brightness(0)';
-        else if(logoFilter === 'white') logoImg.style.filter = 'brightness(0) invert(1)';
-        else if(logoFilter === 'gold') logoImg.style.filter = 'sepia(1) hue-rotate(5deg) saturate(3)';
-        else logoImg.style.filter = 'none';
-      } else {
-        logoImg.style.display = 'none';
+        let filterStyle = '';
+        if(logoFilter === 'red') filterStyle = 'filter: drop-shadow(0px 0px 0px #f40009) sepia(1) hue-rotate(300deg) saturate(5);';
+        else if(logoFilter === 'black') filterStyle = 'filter: brightness(0);';
+        else if(logoFilter === 'white') filterStyle = 'filter: brightness(0) invert(1);';
+        else if(logoFilter === 'gold') filterStyle = 'filter: sepia(1) hue-rotate(5deg) saturate(3);';
+        venueLogoHtml = `<img class="pdf-logo" src="${logoBase64}" style="${filterStyle}">`;
       }
 
-      let bodyHtml = "";
-      let totalCost = 0;
-      let totalNetSell = 0;
+      // Inteligentní rozdělení sekcí na stránky
+      let pages = [];
+      let currentPageSections = [];
+      let currentEstimatedItems = 0;
+      const MAX_ITEMS_PER_PAGE = 12;
 
       menuData.forEach(sec => {
-        bodyHtml += `
-          <div class="pdf-sec-title" style="font-family: ${fontSection}; color: ${colorSection}; border-color: ${colorSection};">
-            ${sec.title}
-          </div>
-        `;
-        
-        sec.items.forEach(item => {
-          const netSell = item.price / 1.12;
-          totalCost += item.cost;
-          totalNetSell += netSell;
-
-          bodyHtml += `
-            <div class="pdf-item" style="font-family: ${fontItems}; color: ${colorItems};">
-              <span>${item.name}</span>
-              <span style="font-weight:bold;">${item.price} Kč</span>
-            </div>
-          `;
-        });
-      });
-
-      document.getElementById('pdf-content-body').innerHTML = bodyHtml;
-
-      // ZÁPATÍ COCA-COLA LOGO (SPOLEHLIVÉ FILTRY PRO ČERVENOU, BÍLOU, ČERNOU I ZLATOU)
-      const cokeStyle = document.getElementById('coke-logo-style').value;
-      const footerEl = document.getElementById('pdf-coke-footer');
-      const footerImg = document.getElementById('coke-footer-img');
-
-      if (cokeStyle !== 'none') {
-        footerEl.style.display = 'block';
-        footerImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg';
-
-        if (cokeStyle === 'red') {
-          footerImg.style.filter = 'brightness(0) saturate(100%) invert(14%) sepia(98%) saturate(6080%) hue-rotate(354deg) brightness(97%) contrast(108%)';
-        } else if (cokeStyle === 'white') {
-          footerImg.style.filter = 'brightness(0) invert(1)';
-        } else if (cokeStyle === 'black') {
-          footerImg.style.filter = 'brightness(0)';
-        } else if (cokeStyle === 'gold') {
-          footerImg.style.filter = 'brightness(0) saturate(100%) invert(72%) sepia(51%) saturate(542%) hue-rotate(5deg) brightness(93%) contrast(88%)';
+        let secItemCount = sec.items.length + 1;
+        if (currentPageSections.length > 0 && (currentEstimatedItems + secItemCount > MAX_ITEMS_PER_PAGE)) {
+          pages.push(currentPageSections);
+          currentPageSections = [sec];
+          currentEstimatedItems = secItemCount;
+        } else {
+          currentPageSections.push(sec);
+          currentEstimatedItems += secItemCount;
         }
-      } else {
-        footerEl.style.display = 'none';
+      });
+      if (currentPageSections.length > 0) {
+        pages.push(currentPageSections);
       }
 
+      let containerHtml = "";
+      pages.forEach((pageSections, pIndex) => {
+        let bodyHtml = "";
+        pageSections.forEach(sec => {
+          bodyHtml += `
+            <div class="pdf-sec-title" style="font-family: ${fontSection}; color: ${colorSection}; border-color: ${colorSection};">
+              ${sec.title}
+            </div>
+          `;
+          sec.items.forEach(item => {
+            bodyHtml += `
+              <div class="pdf-item" style="font-family: ${fontItems}; color: ${colorItems};">
+                <span>${item.name}</span>
+                <span style="font-weight:bold;">${item.price} Kč</span>
+              </div>
+            `;
+          });
+        });
+
+        containerHtml += `
+          <div class="pdf-page ${bgStyle}" data-page="${pIndex}">
+            <div>
+              <div class="pdf-header">
+                ${venueLogoHtml}
+                <div class="pdf-title" style="font-family: ${fontTitle}; color: ${colorTitle};">${venueName}</div>
+                <div style="font-size: 0.85rem; opacity: 0.8; font-family: ${fontItems}; color: ${colorTitle};">${menuSubtitle}</div>
+             </div>
+              <div>${bodyHtml}</div>
+            </div>
+            <div class="pdf-footer"></div>
+          </div>
+        `;
+      });
+
+      document.getElementById('pdf-pages-container').innerHTML = containerHtml;
+
+      let totalCost = 0;
+      let totalNetSell = 0;
+      menuData.forEach(sec => {
+        sec.items.forEach(item => {
+          totalCost += item.cost;
+          totalNetSell += (item.price / 1.12);
+        });
+      });
       const totalProfit = totalNetSell - totalCost;
       const avgMargin = totalNetSell > 0 ? (totalProfit / totalNetSell) * 100 : 0;
 
@@ -602,20 +557,29 @@
 
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-      const element = document.getElementById('pdf-template');
+      const pageElements = document.querySelectorAll('.pdf-page');
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null
-      });
-
-      const imgData = canvas.toDataURL('image/png');
+      // Vytvoření PDF bez okrajů (0 mm), plná plocha A4
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pdfWidth = 210;
+      const pdfHeight = 297;
 
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      for (let i = 0; i < pageElements.length; i++) {
+        const canvas = await html2canvas(pageElements[i], {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: null
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+
+        if (i > 0) {
+          pdf.addPage();
+        }
+
+        // Vykreslení přes celou stránku A4 od souřadnic 0,0 bez bílých okrajů
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      }
       
       const venueName = document.getElementById('venue-name').value || 'Menu';
       pdf.save(`Napojovy_Listek_${venueName.replace(/\s+/g, '_')}.pdf`);
